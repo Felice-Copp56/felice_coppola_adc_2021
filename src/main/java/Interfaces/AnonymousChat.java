@@ -27,5 +27,7 @@ public interface AnonymousChat {
      */
     public boolean sendMessage(String _room_name, String _text_message);
 
+    public boolean leaveNetwork();
+
 
 }
