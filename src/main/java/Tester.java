@@ -13,37 +13,31 @@ public class Tester {
     @Option(name="-id", aliases="--identifierpeer", usage="the unique identifier for this peer", required=true)
     private static int id;
 
-    public static void main(String[] args) throws Exception {
-
-        class MessageListenerImpl implements MessageListener {
-            int peerid;
-
-            public MessageListenerImpl(int peerid)
-            {
-                this.peerid=peerid;
-
-            }
-            public Object parseMessage(Object obj) {
-
-                TextIO textIO = TextIoFactory.getTextIO();
-                TextTerminal terminal = textIO.getTextTerminal();
-                terminal.printf("\n"+peerid+"] (Direct Message Received) "+obj+"\n\n");
-                return "success";
-            }
-
+    AnonymousChatImpl peer;
+    TextIO textIO = TextIoFactory.getTextIO();
+    TextTerminal terminal;
+    public Tester(String masterPeer, int peerID) {
+        try {
+            peer = new AnonymousChatImpl(id, masterPeer, new MessageListenerImpl(peerID));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Tester example = new Tester();
-        final CmdLineParser parser = new CmdLineParser(example);
+    }
+
+    public static void main(String[] args) throws Exception {
+        String masterPeer= args[0];
+        int peerID=Integer.parseInt(args[1]);
+        Tester tester = new Tester(masterPeer,peerID);
+        tester.launchAnonymous(peerID, masterPeer);
+
+    }
+
+    public void launchAnonymous(int peerID, String masterPeer){
         try
         {
-            parser.parseArgument(args);
-            TextIO textIO = TextIoFactory.getTextIO();
-            TextTerminal terminal = textIO.getTextTerminal();
-            AnonymousChatImpl peer =
-                        new AnonymousChatImpl(id, master, new MessageListenerImpl(id));
-
+            terminal = textIO.getTextTerminal();
             terminal.printf("\nStaring peer id: %d on master node: %s\n",
-                    id, master);
+                    peerID, masterPeer);
             while(true) {
                 printMenu(terminal);
 
@@ -52,27 +46,37 @@ public class Tester {
                         .withMinVal(1)
                         .read("Option");
                 switch (option) {
-                    case 1:
+                    case 1 -> {
                         terminal.printf("\nENTER ROOM NAME\n");
-                        String name = textIO.newStringInputReader()
+                        String roomName = textIO.newStringInputReader()
                                 .withDefaultValue("default-room")
                                 .read("Name:");
-                        if(peer.createRoom(name))
-                            terminal.printf("\nROOM %s SUCCESSFULLY CREATED\n",name);
+                        if (peer.createRoom(roomName))
+                            terminal.printf("\nROOM %s SUCCESSFULLY CREATED\n", roomName);
                         else
                             terminal.printf("\nERROR IN ROOM CREATION\n");
-                        break;
-                    case 2:
+                    }
+                    case 2 -> {
                         terminal.printf("\nENTER TOPIC NAME\n");
                         String sname = textIO.newStringInputReader()
                                 .withDefaultValue("default-topic")
                                 .read("Name:");
-                        if(peer.joinRoom(sname))
-                            terminal.printf("\n SUCCESSFULLY JOINED TO %s\n",sname);
+                        if (peer.joinRoom(sname))
+                            terminal.printf("\n SUCCESSFULLY JOINED TO %s\n", sname);
                         else
                             terminal.printf("\nERROR IN ROOM SUBSCRIPTION\n");
-                        break;
-                    case 4:
+                    }
+                    case 3 -> {
+                        terminal.printf("\nENTER TOPIC NAME\n");
+                        String uname = textIO.newStringInputReader()
+                                .withDefaultValue("default-topic")
+                                .read("Name:");
+                        if (peer.leaveRoom(uname))
+                            terminal.printf("\n SUCCESSFULLY UNSUBSCRIBED TO %s\n", uname);
+                        else
+                            terminal.printf("\nERROR IN TOPIC UN SUBSCRIPTION\n");
+                    }
+                    case 4 -> {
                         terminal.printf("\nENTER ROOM NAME\n");
                         String tname = textIO.newStringInputReader()
                                 .withDefaultValue("default-room")
@@ -81,44 +85,26 @@ public class Tester {
                         String message = textIO.newStringInputReader()
                                 .withDefaultValue("default-message")
                                 .read(" Message:");
-                        if(peer.sendMessage(tname,message))
-                            terminal.printf("\n SUCCESSFULLY PUBLISH MESSAGE ON ROOM %s\n",tname);
+                        if (peer.sendMessage(tname, message))
+                            terminal.printf("\n SUCCESSFULLY PUBLISH MESSAGE ON ROOM %s\n", tname);
                         else
                             terminal.printf("\nERROR IN ROOM PUBLISH\n");
-
-                        break;
-                    case 3:
-                        terminal.printf("\nENTER TOPIC NAME\n");
-                        String uname = textIO.newStringInputReader()
-                                .withDefaultValue("default-topic")
-                                .read("Name:");
-                        if(peer.leaveRoom(uname))
-                            terminal.printf("\n SUCCESSFULLY UNSUBSCRIBED TO %s\n",uname);
-                        else
-                            terminal.printf("\nERROR IN TOPIC UN SUBSCRIPTION\n");
-                        break;
-
-
-                    default:
-                        break;
+                    }
+                    default -> {
+                    }
                 }
             }
 
 
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (CmdLineException clEx)
-        {
-            System.err.println("ERROR: Unable to parse command-line options: " + clEx);
-        }
-
-
     }
     public static void printMenu(TextTerminal terminal) {
         terminal.printf("\n1 - CREATE ROOM\n");
         terminal.printf("\n2 - JOIN ROOM\n");
         terminal.printf("\n3 - LEAVE ROOM\n");
-        terminal.printf("\n4 - SEND TO ROOM\n");
+        terminal.printf("\n4 - SEND MESSAGE TO ROOM\n");
 
     }
 }
