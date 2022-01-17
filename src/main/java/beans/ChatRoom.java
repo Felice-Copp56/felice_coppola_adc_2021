@@ -3,9 +3,10 @@ package beans;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.PeerAddress;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class ChatRoom {
+public class ChatRoom implements Serializable {
     private String roomName;
     private HashSet<PeerAddress> users;
 
