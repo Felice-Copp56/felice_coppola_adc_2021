@@ -35,4 +35,7 @@ public interface AnonymousChat {
 
     public String destroyRoom(String _room_name) throws ClassNotFoundException, IOException;
 
+    public String showUsers(String _room_name) throws ClassNotFoundException;
+
+
 }

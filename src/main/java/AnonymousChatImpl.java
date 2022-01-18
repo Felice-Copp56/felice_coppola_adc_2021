@@ -1,6 +1,7 @@
 import Interfaces.AnonymousChat;
 import Interfaces.MessageListener;
 import beans.ChatRoom;
+import beans.Message;
 import net.tomp2p.dht.FutureGet;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
@@ -16,7 +17,7 @@ import net.tomp2p.storage.Data;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import java.util.HashSet;
+import java.util.*;
 
 
 public class AnonymousChatImpl implements AnonymousChat {
@@ -159,16 +160,33 @@ public class AnonymousChatImpl implements AnonymousChat {
         System.out.println("Non joinato");
         return "Not joined";
     }
+    public String tryToSendMsg(String _room_name, Message msg) throws ClassNotFoundException {
+        if (msg!=null&&msg.getRoomName()!=null){
+            if (myChatRoomList.contains(msg.getRoomName())){
+                String ris = sendMessage(_room_name,msg.getMessage());
+                if (ris.equals("Successo")) return "Sent";
+                else return "not sent";
+            }
+            return "Not in the room";
+        }
+        return "Error";
+    }
 
     @Override
     public String sendMessage(String _room_name, String _text_message) throws ClassNotFoundException {
         if (myChatRoomList.contains(_room_name)) { //Verifico di essere nella room per inviare il messaggio
             ChatRoom chatRoom = findRoom(_room_name);
             if (chatRoom != null && chatRoom.getUsers() != null) {  //Verifico l'esistenza della chat e degli utenti
+                Message msg = new Message();
+                msg.setRoomName(_room_name);
+                msg.setMessage(_text_message);
+                Date date = new Date();
+                msg.setData(date);
+                msg.setMyMsg(true);
                 for (PeerAddress peerAddress : chatRoom.getUsers()) {
                     //Mando il messaggio agli altri peer e non a me stesso
                     if (!peerAddress.equals(peerDHT.peer().peerAddress())) {
-                        FutureDirect futureDirect = peerDHT.peer().sendDirect(peerAddress).object(_text_message).start();
+                        FutureDirect futureDirect = peerDHT.peer().sendDirect(peerAddress).object(msg).start();
                         futureDirect.awaitUninterruptibly();
                     }
                 }
@@ -207,4 +225,19 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Not found";
     }
 
+    @Override
+    public String showUsers(String _room_name) throws ClassNotFoundException {
+        if (myChatRoomList.contains(_room_name)){
+            ChatRoom chatRoom = findRoom(_room_name);
+            if (chatRoom!=null&&chatRoom.getUsers().contains(peerDHT.peer().peerAddress())){
+                return "Founded";
+            }
+            return "Not found";
+        }
+        return "Not joined";
+    }
+
+    public HashSet<String> getMyChatRoomList() {
+        return myChatRoomList;
+    }
 }
