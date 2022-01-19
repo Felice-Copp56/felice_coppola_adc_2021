@@ -1,3 +1,4 @@
+import Implementation.AnonymousChatImpl;
 import Interfaces.MessageListener;
 import beans.ChatRoom;
 import beans.Message;
@@ -19,7 +20,7 @@ public class Tester {
     AnonymousChatImpl peer;
     TextIO textIO = TextIoFactory.getTextIO();
     TextTerminal terminal;
-    boolean exit = true;
+    boolean exit = false;
     boolean exitIn = true;
     HashMap<String, List<Message>> listHashMap = new HashMap<>();
 
@@ -45,16 +46,22 @@ public class Tester {
     public void launchAnonymous(int peerID, String masterPeer) {
         try {
             terminal = textIO.getTextTerminal();
+            textIO.getTextTerminal().getProperties().setInputColor("cyan");
             terminal.printf("\nStaring peer id: %d on master node: %s\n",
                     peerID, masterPeer);
 
-            while (exit) {
+            if (textIO.newStringInputReader().equals("WQ")) {
+                exit = false;
+                printMenu(terminal);
+            }
+            while (!exit) {
                 printMenu(terminal);
 
                 int option = textIO.newIntInputReader()
                         .withMaxVal(8)
                         .withMinVal(1)
                         .read("Option");
+
                 switch (option) {
                     case 1 -> createNewRoomFirstOption(); /*inTheRoom(peerID,masterPeer);*/
                     case 2 -> joinRoomSecondOption();
@@ -89,12 +96,14 @@ public class Tester {
             this.message = (Message) obj;
             TextIO textIO = TextIoFactory.getTextIO();
             TextTerminal terminal = textIO.getTextTerminal();
+            //Verifico se il messaggio è diverso da null ed ha una roomName valido
             if (message != null && message.getRoomName() != null) {
                 System.out.println("Sono dentro al null");
+                //Se la lista dei messaggi della room non è null, allora posso ottenere la lista e aggiungere un nuovo messaggio
                 if (listHashMap.get(message.getRoomName()) != null) {
                     System.out.println("Sono dentro al secondo null");
                     listHashMap.get(message.getRoomName()).add(message);//Aggiungo il messaggio
-                    terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
+                    //terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
                 }
             }
             if (message != null) return message;
@@ -107,40 +116,10 @@ public class Tester {
     }
 
 
-    public void inTheRoom(int peerID, String masterPeer) {
-        try {
-            terminal = textIO.getTextTerminal();
-            terminal.printf("\nStaring peer id: %d on master node: %s\n",
-                    peerID, masterPeer);
-
-            while (exitIn) {
-                printMenuInTheRoom(terminal);
-
-                int option = textIO.newIntInputReader()
-                        .withMaxVal(6)
-                        .withMinVal(1)
-                        .read("Option");
-                switch (option) {
-                    case 1 -> {
-                        leaveRoomThirdOption();
-                        exit = false;
-                    }
-                    case 2 -> sendMessageToRoomFourthOption();
-                    case 3 -> leaveNetworkFifthOption();
-                    case 4 -> destroyRoomSixthOption();
-                    case 5 -> exitIn = false;
-                    default -> {
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void createNewRoomFirstOption() throws Exception {
         terminal.printf("\nENTER ROOM NAME\n");
+
         String roomName = textIO.newStringInputReader()
                 .withDefaultValue("default-room")
                 .read("Name:");
@@ -149,7 +128,10 @@ public class Tester {
             String ris = peer.createChatRoom(chatRoom);
 
             switch (ris) {
-                case "Successo" -> {terminal.printf("\n ROOM CREATED SUCCESSFULLY\n"); listHashMap.put(roomName,new ArrayList<>());}
+                case "Successo" -> {
+                    terminal.printf("\n ROOM CREATED SUCCESSFULLY\n");
+                    listHashMap.put(roomName, new ArrayList<>());
+                }
                 case "Fallimento" -> terminal.printf("\nERROR IN ROOM CREATION\n");
                 case "Esistente" -> terminal.printf("\nROOM ALREADY EXISTS\n");
             }
@@ -168,7 +150,10 @@ public class Tester {
             ChatRoom chatRoom = peer.findRoom(roomName); //Ottengo la room per fornire informazioni
 
             switch (ris) {
-                case "Successo" -> {terminal.printf("\n SUCCESSFULLY JOINED TO %s\n", roomName + "THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH YOU!"); listHashMap.put(roomName,new ArrayList<>());}
+                case "Successo" -> {
+                    terminal.printf("\n SUCCESSFULLY JOINED TO %s\n", roomName + "THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH YOU!");
+                    listHashMap.put(roomName, new ArrayList<>());
+                }
                 case "Fallimento" -> terminal.printf("\nERROR IN ROOM " + roomName + " SUBSCRIPTION, CHECK THE NAME\n");
                 case "Joined" -> terminal.printf("\nYOU'RE ALREADY JOINED IN THE ROOM \n" + roomName);
 
@@ -199,28 +184,33 @@ public class Tester {
         String roomName = textIO.newStringInputReader()
                 .withDefaultValue("default-room")
                 .read("Name:");
-        terminal.printf("\nENTER THE MESSAGE FOR THE USERS\n");
-        String msg = textIO.newStringInputReader().withDefaultValue("default-message").read("Message: ");
+        boolean out = true;
         Message messaggio = new Message();
-        if (roomName != null && !roomName.isEmpty()) {
-            messaggio.setMessage(msg);
-            messaggio.setData(Calendar.getInstance().getTime());
-            messaggio.setRoomName(roomName);
-            String ris = peer.tryToSendMsg(roomName, messaggio);
-            switch (ris) {
-                case "Sent" -> {
-                    messaggio.setMyMsg(true);
-
-                    if (listHashMap.get(roomName) == null)
-                        System.out.println("Dentro al successo");
-                            listHashMap.put(roomName, new ArrayList<>());
-                        listHashMap.get(roomName).add(messaggio);
-
-                    terminal.printf("Il messaggio " + msg + " è stato inviato correttamente alla room " + roomName);
-                }
-                case "not sent" -> terminal.printf("Il messaggio " + msg + " non è stato inviato correttamente alla room " + roomName);
+        while (out) {
+            terminal.printf("\nENTER THE MESSAGE FOR THE USERS OR WQ FOR EXIT\n");
+            String msg = textIO.newStringInputReader().withDefaultValue("default-message").read("Message: ");
+            if (msg.equals("WQ")) {
+                out = false;
             }
 
+            if (roomName != null && !roomName.isEmpty()&&out) {
+                messaggio.setMessage(msg);
+                messaggio.setData(Calendar.getInstance().getTime());
+                messaggio.setRoomName(roomName);
+                String ris = peer.tryToSendMsg(roomName, messaggio);
+                switch (ris) {
+                    case "Sent" -> {
+                        //Se non è presente la chiave roomName con la lista, allora creo un arraylist per la stanza cosi da poter inserire il messaggio
+                        listHashMap.computeIfAbsent(roomName, k -> new ArrayList<>());
+                        listHashMap.get(roomName).add(messaggio);
+
+                        terminal.printf("\nMESSAGE " + msg + " SUCCESSFULLY SENT " + roomName + "\n");
+                    }
+                    case "not sent" -> terminal.printf("\nMESSAGE " + msg + " DIDN'T SEND TO THE ROOM " + roomName + "\n");
+                    case "Not in the room" -> terminal.printf("\n MESSAGE "+msg+" DON'T SEND, YOU AREN'T IN THE ROOM \n");
+                    case "Error" -> terminal.printf("\n SOMETHING WENT WRONG AMMO \n");
+                }
+            }
         }
     }
 
@@ -303,12 +293,16 @@ public class Tester {
     }
 
     public void showMsg() {
-        String roomName = textIO.newStringInputReader().read("\n INSERT NAME");
+
+        String roomName = textIO.newStringInputReader().read("\n INSERT NAME ");
         if (peer.getMyChatRoomList().contains(roomName)) {
             List<Message> messageList = listHashMap.get(roomName);
-            System.out.println("Messaggio size "+messageList.size());
+            System.out.println("Messaggio size " + messageList.size());
+            if (messageList.size()==0){
+                terminal.printf("\n NO NEW MESSAGE IN THE CHAT, TRY LATER\n");
+            }
             for (Message message : messageList) {
-                terminal.printf("Ricevuto: "+message.getMessage()+ "Alle ore:"+message.getData()+"\n");
+                terminal.printf("\n  " + message.getMessage() + " Alle ore: " + message.getData() + "\n");
             }
         }
     }
@@ -321,16 +315,7 @@ public class Tester {
         terminal.printf("\n5 - LEAVE NETWORK\n");
         terminal.printf("\n6 - DESTROY ROOM\n");
         terminal.printf("\n7 - SHOW USERS ROOM\n");
-
-    }
-
-    public static void printMenuInTheRoom(TextTerminal terminal) {
-        terminal.printf("\n1 - LEAVE ROOM\n");
-        terminal.printf("\n2 - SEND MESSAGE TO ROOM\n");
-        terminal.printf("\n3 - LEAVE NETWORK\n");
-        terminal.printf("\n4 - DESTROY ROOM\n");
-        terminal.printf("\n5 - EXIT MENU, IF U WANT TO READ MSG \n");
-
+        terminal.printf("\n8 - SHOW MESSAGES ROOM\n");
 
     }
 }
