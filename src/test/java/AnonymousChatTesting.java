@@ -1,25 +1,20 @@
-package test;
-
-
 import Implementation.AnonymousChatImpl;
-import Interfaces.MessageListener;
 import beans.ChatRoom;
 import beans.Message;
-import org.beryx.textio.TextIO;
-import org.beryx.textio.TextIoFactory;
-import org.beryx.textio.TextTerminal;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class AnonymousChatTesting {
 
-    AnonymousChatImpl peer0, peer1, peer2, peer3;
+    private static AnonymousChatImpl peer0, peer1, peer2, peer3;
     HashMap<String, List<Message>> listHashMap = new HashMap<>();
 
-    public AnonymousChatTesting() throws Exception {
+    /*public AnonymousChatTesting() throws Exception {
         class MessageListenerImpl implements MessageListener {
 
             int peerid;
@@ -55,16 +50,23 @@ public class AnonymousChatTesting {
         }
 
 
-            peer0 = new AnonymousChatImpl(0, "127.0.0.1", new MessageListenerImpl(0));
-            peer1 = new AnonymousChatImpl(1, "127.0.0.1", new MessageListenerImpl(1));
-            peer2 = new AnonymousChatImpl(2, "127.0.0.1", new MessageListenerImpl(2));
-            peer3 = new AnonymousChatImpl(3, "127.0.0.1", new MessageListenerImpl(3));
+        peer0 = new AnonymousChatImpl(0, "127.0.0.1", new MessageListenerImpl(0));
+        peer1 = new AnonymousChatImpl(1, "127.0.0.1", new MessageListenerImpl(1));
+        peer2 = new AnonymousChatImpl(2, "127.0.0.1", new MessageListenerImpl(2));
+        peer3 = new AnonymousChatImpl(3, "127.0.0.1", new MessageListenerImpl(3));
 
-        }
 
-    @Test
-    void testCaseCreateRoom(TestInfo testInfo){
-    String ris=peer0.createChatRoom(new ChatRoom("1.1_CreaRoom",null));
-
+    }*/
+    @BeforeAll
+    static void inizializzaione() throws Exception {
+        peer0 = new AnonymousChatImpl(0, "127.0.0.1", new MessageListenerImpl(0));
+        peer1 = new AnonymousChatImpl(1, "127.0.0.1", new MessageListenerImpl(1));
+        peer2 = new AnonymousChatImpl(2, "127.0.0.1", new MessageListenerImpl(2));
+        peer3 = new AnonymousChatImpl(3, "127.0.0.1", new MessageListenerImpl(3));
     }
+
+
 }
+
+
+
