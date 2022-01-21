@@ -83,6 +83,7 @@ public class AnonymousChatImpl implements AnonymousChat {
             }
             ChatRoom alreadyExists = findRoom(chatRoom.getRoomName()); //Verifico se è già presente una room con lo stesso nome
             if (alreadyExists == null) {
+                System.out.println(chatRoom.getRoomName());
                 //Provo a creare la room
                 boolean ris = createRoom(chatRoom.getRoomName()); //Chiamata al metodo createRoom dell'interfaccia AnonymousChat
                 return ris ? "Successo" : "Fallimento";
@@ -201,12 +202,12 @@ public class AnonymousChatImpl implements AnonymousChat {
 
 
     @Override
-    public String leaveNetwork() throws IOException, ClassNotFoundException {
-        for (String subscriptedrooms:myChatRoomList){
+    public boolean leaveNetwork() throws IOException, ClassNotFoundException {
+        for (String subscriptedrooms:new ArrayList<String>(myChatRoomList)){
             leaveRoom(subscriptedrooms);
         }
         peerDHT.peer().announceShutdown().start().awaitUninterruptibly();
-        return "Disconnected";
+        return true;
     }
 
     @Override
@@ -222,9 +223,9 @@ public class AnonymousChatImpl implements AnonymousChat {
                     leaveRoom(_room_name);
                     peerDHT.remove(Number160.createHash(_room_name)).start().awaitUninterruptibly();
                     return "Destroyed";
-            }return "Not destroyed";
+            }return "Not Destroyed";
         }
-        return "Not found";
+        return "Not Found";
     }
 
     @Override

@@ -254,8 +254,8 @@ public class Tester {
                 //terminal.print("\nROOM " + roomName + " DESTROYED\n");
                 switch (ris) {
                     case "Destroyed" -> terminal.printf("\nSUCCESSFULLY DESTROYED THE ROOM \n" + roomName);
-                    case "Not destroyed" -> terminal.printf("\nERRROR IN ROOM \n" + roomName + " DESTROY YOU AREN'T ALONE, THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH U");
-                    case "Not found" -> terminal.printf("\nERROR IN ROOM " + roomName + " DESTROY\n" + " MAYBE ROOM DOESN'T EXISTS");
+                    case "Not Destroyed" -> terminal.printf("\nERRROR IN ROOM \n" + roomName + " DESTROY YOU AREN'T ALONE, THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH U");
+                    case "Not Found" -> terminal.printf("\nERROR IN ROOM " + roomName + " DESTROY\n" + " MAYBE ROOM DOESN'T EXISTS");
                 }
             }
         } else {
