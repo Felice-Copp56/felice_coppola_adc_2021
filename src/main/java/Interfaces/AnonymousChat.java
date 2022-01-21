@@ -31,7 +31,7 @@ public interface AnonymousChat {
 
 
     //Nuovi metodi aggiunti per ulteriori funzionalità
-    public String leaveNetwork() throws IOException, ClassNotFoundException;
+    public boolean leaveNetwork() throws IOException, ClassNotFoundException;
 
     public String destroyRoom(String _room_name) throws ClassNotFoundException, IOException;
 
