@@ -1,9 +1,11 @@
 # felice_coppola_adc_2021
-## Felice Coppola: 0522501020
-## Anonymous Chat
-## MD5 hash project: f1261c15cadd794b0e6be7ba43d4af4d
+
 
 ![image](https://play-lh.googleusercontent.com/9PfXXTijC_98UWTnPlG1xNO1Zs1YyE_samusENzGHzRTHVgGqBWJjuNrlu00N7a6jAk)
+
+| Studente  | Progetto |
+| ------------- | ------------- |
+| Felice Coppola 0522501020  | Anonymous Chat  |
 
 
 # Tabella dei contenuti
