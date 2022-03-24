@@ -9,12 +9,9 @@
 
 
 # Tabella dei contenuti
- 1. Idea del progetto
- 2. Soluzione proposta
-    - Join
-    - Leave
-    - Interact
- 3. Struttura del progetto
+ 1. Descrizione del progetto
+ 2. Tecnologie e librerie utilizzate
+ 3. Soluzione proposta e Struttura del progetto
  4. Testing con JUnit
  5. Getting Started
     - Prerequisiti
@@ -22,20 +19,49 @@
  6. Utilizzo
 
 
-## Idea del progetto
+## Descrizione del progetto
 L'idea del progetto è quella di realizzare un "Anonymous Chat" eseguita su una rete P2P, basandosi sull'idea fornita dal [progetto di esempio](https://github.com/spagnuolocarmine/p2ppublishsubscribe.git) del Professor 
 [Carmine Spagnuolo](https://github.com/spagnuolocarmine) per l'esame di ADC dell'Università degli studi di Salerno.
-
+Infatti, il progetto mira a ricreare tutte le funzionalità tipiche di una chat anonima, con alcune funzionalità extra, pensate per 
+rendere leggermente più accattivante il progetto.
+Nello specifico è possibile:
+- Creare una stanza
+- Accedere ad una stanza
+- Inviare messaggi in una stanza
+- Lasciare una stanza
+Bonus:
+- Lasciare la rete
+- Distruggere una stanza
+- Mostrare gli utenti in una stanza
+- Mostrare i messaggi in una stanza
 
 L'obiettivo principale è quello, quindi, di realizzare un progetto che sfrutti una comunicazione asincrona ed anonima. Questi requisiti sono stati raggiunti
 grazie all'utilizzo del paradigma **Publish/Subscribe** e al framework/libreria **TomP2P**.
 
-## Soluzione Proposta
-In breve ogni peer deve essere in grado inviare messaggi su una chat room pubblica in modo anonimo.  Il sistema consente agli utenti di creare una nuova stanza, entrare in una stanza, lasciare una stanza e inviare messaggi.
-Inoltre, sono state implementate altre funzionalità che verranno illustrate successivamente.
-Ora, vedremo in dettaglio le diverse funzionalità e operazioni garantite per il funzionamento del sistema.
-### Join
-Tramite quest'operazione un nodo è in grado di collegarsi ad una rete e iniziare a chattare grazie all'instanziazione di un oggetto della classe **AnonymousChat**.
+## Tecnologie e librerie utilizzate
+-TomP2P: Libreria che permette la gestione di dht all'interno della rete.
+-Java: Linguaggio di programmazione utilizzato per lo sviluppo del progetto.
+-Maven: Software project management utilizzato per la gestione del progetto.
+-JUnit: Framework utilizzato per poter effettuare testing.
+-Docker: Software utilizzato per la creazione di container.
+
+## Soluzione proposta
+Per la realizzazione e lo sviluppo della soluzione con le tecnologie e librerie precedentemente illustrate si è partiti dalle [API](https://github.com/spagnuolocarmine/distributedsystems-unisa/blob/master/homework/AnonymousChat.java) fornite dal professore
+
+Nel package del progetto, diviso per cartelle, troviamo:
+- la cartella **Beans** la quale include:
+  - **Chatroom**: rappresenta la classe per l'istanziazione di oggetti di tipo ChatRoom e che implementa diverse funzionalità per i peer 
+  - **Message**: rappresenta la classe per l'istanziazione di oggetti di tipo Message, i quali racchiudono banalmente i messaggi inviati nelle stanze
+- la cartella **Interfaces** include:
+  - **AnonymousChat**: rappresenta l'interfaccia che contiene i metodi principali che sono stati poi implementati
+  - **MessageListener**: rappresenta l'interfaccia per il parsing dei messaggi ricevuti dai peer
+- la cartella **Implementation** include
+  - **AnonymousChatImpl**: rappresenta la classe che implementa l'interfaccia **AnonymousChat**  
+- **MessageListenerImpl** rappresenta la classe che implementa l'interfaccia **MessageListener**
+- **Tester** rappresenta la classe utilizzata per l'implementazione di AnonymousChat
+
+
+
 
 
 
