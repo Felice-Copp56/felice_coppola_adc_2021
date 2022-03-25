@@ -14,9 +14,7 @@
  3. Soluzione proposta e Descrizione della soluzione
  4. Testing con JUnit
  5. Getting Started
-    - Prerequisiti
-    - Installazione
- 6. Utilizzo
+ 
 
 
 ## Descrizione del progetto
@@ -33,7 +31,7 @@ Bonus:
 - Lasciare la rete
 - Distruggere una stanza
 - Mostrare gli utenti in una stanza
-- Mostrare i messaggi in una stanza
+- Mostrare i messaggi di una stanza
 
 L'obiettivo principale è quello, quindi, di realizzare un progetto che sfrutti una comunicazione asincrona ed anonima. Questi requisiti sono stati raggiunti
 grazie all'utilizzo del paradigma **Publish/Subscribe** e al framework/libreria **TomP2P**.
@@ -48,17 +46,18 @@ grazie all'utilizzo del paradigma **Publish/Subscribe** e al framework/libreria 
 ## Soluzione proposta
 Per la realizzazione e lo sviluppo della soluzione con le tecnologie e librerie precedentemente illustrate si è partiti dalle [API](https://github.com/spagnuolocarmine/distributedsystems-unisa/blob/master/homework/AnonymousChat.java) fornite dal professore
 
-Nel package del progetto, diviso per cartelle, troviamo:
+Nel package del progetto, src/main/java diviso per cartelle, troviamo:
 - la cartella **Beans** la quale include:
-  - **Chatroom**: rappresenta la classe per l'istanziazione di oggetti di tipo ChatRoom e che implementa diverse funzionalità per i peer 
-  - **Message**: rappresenta la classe per l'istanziazione di oggetti di tipo Message, i quali racchiudono banalmente i messaggi inviati nelle stanze
+  - **Chatroom.java**: rappresenta la classe per l'istanziazione di oggetti di tipo ChatRoom e che implementa diverse funzionalità per i peer 
+  - **Message.java**: rappresenta la classe per l'istanziazione di oggetti di tipo Message, i quali racchiudono banalmente i messaggi inviati nelle stanze
 - la cartella **Interfaces** include:
-  - **AnonymousChat**: rappresenta l'interfaccia che contiene i metodi principali che sono stati poi implementati
-  - **MessageListener**: rappresenta l'interfaccia per il parsing dei messaggi ricevuti dai peer
+  - **AnonymousChat.java**: rappresenta l'interfaccia che contiene i metodi principali che sono stati poi implementati
+  - **MessageListener.java**: rappresenta l'interfaccia per il parsing dei messaggi ricevuti dai peer
 - la cartella **Implementation** include
-  - **AnonymousChatImpl**: rappresenta la classe che implementa l'interfaccia **AnonymousChat**  
-- **MessageListenerImpl** rappresenta la classe che implementa l'interfaccia **MessageListener**
-- **Tester** rappresenta la classe utilizzata per l'implementazione di AnonymousChat
+  - **AnonymousChatImpl.java**: rappresenta la classe che implementa l'interfaccia **AnonymousChat**  
+  - **MessageListenerImpl.java** rappresenta la classe che implementa l'interfaccia **MessageListener**
+- **Tester.java** rappresenta la classe Main per il progetto
+- **Dockerfile**file docker che contiene i comandi che l'utente potrà eseguire per creare un'immagine docker
 ## Descrizione della soluzione
 La classe **AnonymousChatImpl** contiene l'implmeentazione dei metodi ereditati dall'interfaccia **AnonymousChat**:
 - **createRoom**: permette ad un peer di creare una nuova stanza
@@ -78,9 +77,45 @@ Oltre questi metodi principali sono stat implementati anche altri metodi di util
   ![image](https://user-images.githubusercontent.com/55912466/160074090-dfd25278-f264-4b97-b73a-d3e2204f7d57.png)
 
 ## Testing con JUnit
+Il testing delle funzionalità è stato effettuato attraverso l'utilizzo della libreria JUnit
+Per creare i test cases sono stati:
+- creati 4 peers che verranno utilizzati per i vasi test cases
+- i test cases sono stati creati sulla base delle funzionalità del progetto, e sono stati esplorati tutti i possibili casi (ad esempio messaggi inviati in una stanza non esistente oppure il join ad una stanza nella quale si è già joinati)
+- una volta ultimati tutti i test cases, è stato chiamato il metodo **leaveNetwork()** per tutti i peers cosi da farli uscire dalla rete.  
 
+I test cases creati, per una maggiore leggibilità ed omogeneità presentano i nomi della funzionalità che si sta testando accompagnati anche da un numero (in quanto sono possibili vari casi per un singolo test case) questo anche per evitare conflitti.
 
+Sono stati implementati 17 test cases che è possibile visualizzare qui [Test](https://github.com/Felice-Copp56/felice_coppola_adc_2021/blob/master/src/test/java/AnonymousChatTesting.java)
 
+Viene riportato un esempio di test case per mostrare un esempio di flusso e di struttura:
+### Test case per la creazione di una room già esistente o alla quale si è già joinati
+![image](https://user-images.githubusercontent.com/55912466/160136863-72967674-a0a2-4834-93fc-b22071dc7a70.png)
 
+## Getting Started
+L'applicazione è fornita tramite l'utilizzo di un container Docker, in esecuzione sulla macchina locale.
+- Innanzitutto bisogna fare la build del container docker:
+```bash
+docker build --no-cache -t anonymouschat
+```
+- Successivamente bisogna lanciare il master peer usando:
+```bash
+docker run -i --name-master -e MASTERID="127.0.0.1" -e ID=0 anonymouschat
+```
+**Ricorda di lanciare il master peer usando ID=0.**
+**_Note:_** Dopo il primo run puoi lanciare il master usando il seguente comando:
 
+```bash
+docker start -i MASTER
+```
+- Successivamente si possono lanciare i peer generici:
+ - Avviato il master peer bisogna controllare l'indirizzo IP del container:
+   - Si può verificare l'id del container: ``` docker ps ```
+   - Si può verificare l'indirizzo ip: ``` docker inspect <container ID> ```
+ - Ultimata questa fase è possibile, finalmente, lanciare il peer generico
+   - ``` docker run -i --name peer-1 -e MASTERIP="172.17.0.2" -e ID=1 anonymouschat ```
+
+**Nota** dopo il primo lancio è possibile lanciare il peer usando il seguente comando:
+```
+docker start -i peer-1
+```
 
