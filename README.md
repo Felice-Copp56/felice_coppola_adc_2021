@@ -106,7 +106,7 @@ docker run -i --name-master -e MASTERID="127.0.0.1" -e ID=0 anonymouschat
 **_Note:_** Dopo il primo run puoi lanciare il master usando il seguente comando:
 
 ```bash
-docker start -i MASTER
+docker start -i master
 ```
 - Successivamente si possono lanciare i peer generici:
  - Avviato il master peer bisogna controllare l'indirizzo IP del container:
