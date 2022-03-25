@@ -11,7 +11,7 @@
 # Tabella dei contenuti
  1. Descrizione del progetto
  2. Tecnologie e librerie utilizzate
- 3. Soluzione proposta e Struttura del progetto
+ 3. Soluzione proposta e Descrizione della soluzione
  4. Testing con JUnit
  5. Getting Started
     - Prerequisiti
@@ -39,11 +39,11 @@ L'obiettivo principale è quello, quindi, di realizzare un progetto che sfrutti 
 grazie all'utilizzo del paradigma **Publish/Subscribe** e al framework/libreria **TomP2P**.
 
 ## Tecnologie e librerie utilizzate
--TomP2P: Libreria che permette la gestione di dht all'interno della rete.
--Java: Linguaggio di programmazione utilizzato per lo sviluppo del progetto.
--Maven: Software project management utilizzato per la gestione del progetto.
--JUnit: Framework utilizzato per poter effettuare testing.
--Docker: Software utilizzato per la creazione di container.
+- TomP2P: Libreria che permette la gestione di dht all'interno della rete.
+- Java: Linguaggio di programmazione utilizzato per lo sviluppo del progetto.
+- Maven: Software project management utilizzato per la gestione del progetto.
+- JUnit: Framework utilizzato per poter effettuare testing.
+- Docker: Software utilizzato per la creazione di container.
 
 ## Soluzione proposta
 Per la realizzazione e lo sviluppo della soluzione con le tecnologie e librerie precedentemente illustrate si è partiti dalle [API](https://github.com/spagnuolocarmine/distributedsystems-unisa/blob/master/homework/AnonymousChat.java) fornite dal professore
@@ -59,6 +59,25 @@ Nel package del progetto, diviso per cartelle, troviamo:
   - **AnonymousChatImpl**: rappresenta la classe che implementa l'interfaccia **AnonymousChat**  
 - **MessageListenerImpl** rappresenta la classe che implementa l'interfaccia **MessageListener**
 - **Tester** rappresenta la classe utilizzata per l'implementazione di AnonymousChat
+## Descrizione della soluzione
+La classe **AnonymousChatImpl** contiene l'implmeentazione dei metodi ereditati dall'interfaccia **AnonymousChat**:
+- **createRoom**: permette ad un peer di creare una nuova stanza
+- **joinRoom**: permette di effettuare un join ad una stanza già esistente
+- **leaveRoom**: permette di uscire da una stanza alla quale si è effettuato il join in precedenza
+- **sendMessage**: permette di inviare messaggi in una stanza nella quale si è effettuato il join in precedenza
+- **destroyRoom**: permette di distruggere la stanza, solo se si è l'ultimo rimasto
+- **showUsers**: permette di visualizzare i messaggi inviati nella stanza
+- **leaveNetwork**: permette di lasciare la rete
+Oltre questi metodi principali sono stat implementati anche altri metodi di utilizzo generale per riuscire ad effettuare correttamente le funzionalità precedenti, nello specifico:
+- **findRoom**: permette di controllare se una stanza esiste e la restituisce
+- **createChatRoom**: utilizza il metodo precedente per verificare se una stanza esiste e in caso contrario chiama il metodo principale createRoom per creare la nuova stanza
+- **tryToJoinRoom**: verifica se la stanza è presente già nelle mie stanze altrimenti chiama il metodo Join per effettuare o meno il join
+- **tryToSendMsg**: verifica se è tutto corretto per l'invio del messaggio (controllo se la stanza esiste e siamo joinati oppure messaggio errato)
+
+## Dipendenze e pom.xml
+  ![image](https://user-images.githubusercontent.com/55912466/160074090-dfd25278-f264-4b97-b73a-d3e2204f7d57.png)
+
+## Testing con JUnit
 
 
 
