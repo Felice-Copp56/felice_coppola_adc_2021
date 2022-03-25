@@ -1,7 +1,8 @@
 # felice_coppola_adc_2021
 
-
-![image](https://play-lh.googleusercontent.com/9PfXXTijC_98UWTnPlG1xNO1Zs1YyE_samusENzGHzRTHVgGqBWJjuNrlu00N7a6jAk)
+<p align="center">
+ <img src="https://play-lh.googleusercontent.com/9PfXXTijC_98UWTnPlG1xNO1Zs1YyE_samusENzGHzRTHVgGqBWJjuNrlu00N7a6jAk"/>
+</p>
 
 | Studente  | Progetto |
 | ------------- | ------------- |
@@ -26,7 +27,7 @@ Nello specifico è possibile:
 - Creare una stanza
 - Accedere ad una stanza
 - Inviare messaggi in una stanza
-- Lasciare una stanza
+- Lasciare una stanza\
 Bonus:
 - Lasciare la rete
 - Distruggere una stanza
