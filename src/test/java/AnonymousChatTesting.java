@@ -205,6 +205,7 @@ public class AnonymousChatTesting {
         assertEquals("Successo",ris1);
 
         Message msg = new Message("Default message","4.2SendMsgNotJoined", Calendar.getInstance().getTime(), true);
+        //Aspettiamo not in the room perché peer1 non è presente nella stanza
         String risSend=peer1.tryToSendMsg("4.2SendMsgNotJoined",msg);
         assertEquals("Not in the room",risSend);
     }

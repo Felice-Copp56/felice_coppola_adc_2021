@@ -63,17 +63,35 @@ public class Tester {
                         .read("Option");
 
                 switch (option) {
-                    case 1 -> createNewRoomFirstOption(); /*inTheRoom(peerID,masterPeer);*/
-                    case 2 -> joinRoomSecondOption();
-                    case 3 -> leaveRoomThirdOption();
-                    case 4 -> sendMessageToRoomFourthOption();
-                    case 5 -> leaveNetworkFifthOption();
-                    case 6 -> destroyRoomSixthOption();
-                    case 7 -> showUsersSeventhOption();
-                    case 8 -> showMsg();
+                    case 1:
+                        createNewRoomFirstOption();
+                        break;/*inTheRoom(peerID,masterPeer);*/
+                    case 2:
+                        joinRoomSecondOption();
+                        break;
+                    case 3:
+                        leaveRoomThirdOption();
+                        break;
+                    case 4:
+                        sendMessageToRoomFourthOption();
+                        break;
+                    case 5:
+                        leaveNetworkFifthOption();
+                        break;
+                    case 6:
+                        destroyRoomSixthOption();
+                        break;
+                    case 7:
+                        showUsersSeventhOption();
+                        break;
+                    case 8:
+                        showMsg();
+                        break;
 
-                    default -> {
-                    }
+                    default:
+                        break;
+
+
                 }
             }
         } catch (Exception e) {
@@ -97,14 +115,14 @@ public class Tester {
             TextIO textIO = TextIoFactory.getTextIO();
             TextTerminal terminal = textIO.getTextTerminal();
             //Verifico se il messaggio è diverso da null ed ha una roomName valido
-            if (message != null && message.getRoomName() != null) {
-                System.out.println("Sono dentro al null");
+            if (message != null && message.getRoomName() != null && listHashMap.get(message.getRoomName()) != null) {
+
                 //Se la lista dei messaggi della room non è null, allora posso ottenere la lista e aggiungere un nuovo messaggio
-                if (listHashMap.get(message.getRoomName()) != null) {
-                    System.out.println("Sono dentro al secondo null");
-                    listHashMap.get(message.getRoomName()).add(message);//Aggiungo il messaggio
-                    //terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
-                }
+
+
+                listHashMap.get(message.getRoomName()).add(message);//Aggiungo il messaggio
+                //terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
+
             }
             if (message != null) return message;
             return "not success";
@@ -114,7 +132,6 @@ public class Tester {
             return listMsg;
         }
     }
-
 
 
     public void createNewRoomFirstOption() throws Exception {
@@ -128,12 +145,16 @@ public class Tester {
             String ris = peer.createChatRoom(chatRoom);
 
             switch (ris) {
-                case "Successo" -> {
+                case "Successo":
                     terminal.printf("\n ROOM CREATED SUCCESSFULLY\n");
                     listHashMap.put(roomName, new ArrayList<>());
-                }
-                case "Fallimento" -> terminal.printf("\nERROR IN ROOM CREATION\n");
-                case "Esistente" -> terminal.printf("\nROOM ALREADY EXISTS\n");
+                    break;
+                case "Fallimento":
+                    terminal.printf("\nERROR IN ROOM CREATION\n");
+                    break;
+                case "Esistente":
+                    terminal.printf("\nROOM ALREADY EXISTS\n");
+                    break;
             }
         }
     }
@@ -150,12 +171,17 @@ public class Tester {
             ChatRoom chatRoom = peer.findRoom(roomName); //Ottengo la room per fornire informazioni
 
             switch (ris) {
-                case "Successo" -> {
+                case "Successo":
                     terminal.printf("\n SUCCESSFULLY JOINED TO %s\n", roomName + "THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH YOU!");
                     listHashMap.put(roomName, new ArrayList<>());
-                }
-                case "Fallimento" -> terminal.printf("\nERROR IN ROOM " + roomName + " SUBSCRIPTION, CHECK THE NAME\n");
-                case "Joined" -> terminal.printf("\nYOU'RE ALREADY JOINED IN THE ROOM \n" + roomName);
+
+                    break;
+                case "Fallimento":
+                    terminal.printf("\nERROR IN ROOM " + roomName + " SUBSCRIPTION, CHECK THE NAME\n");
+                    break;
+                case "Joined":
+                    terminal.printf("\nYOU'RE ALREADY JOINED IN THE ROOM \n" + roomName);
+                    break;
 
             }
         }
@@ -170,9 +196,15 @@ public class Tester {
             String ris = peer.leaveRoom(roomName);
 
             switch (ris) {
-                case "Leave" -> terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
-                case "Not Leave" -> terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
-                case "Not joined" -> terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                case "Leave":
+                    terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
+                    break;
+                case "Not Leave":
+                    terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
+                    break;
+                case "Not joined":
+                    terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                    break;
             }
 
 
@@ -193,22 +225,28 @@ public class Tester {
                 out = false;
             }
 
-            if (roomName != null && !roomName.isEmpty()&&out) {
+            if (roomName != null && !roomName.isEmpty() && out) {
                 messaggio.setMessage(msg);
                 messaggio.setData(Calendar.getInstance().getTime());
                 messaggio.setRoomName(roomName);
                 String ris = peer.tryToSendMsg(roomName, messaggio);
                 switch (ris) {
-                    case "Sent" -> {
+                    case "Sent":
                         //Se non è presente la chiave roomName con la lista, allora creo un arraylist per la stanza cosi da poter inserire il messaggio
                         listHashMap.computeIfAbsent(roomName, k -> new ArrayList<>());
                         listHashMap.get(roomName).add(messaggio);
 
                         terminal.printf("\nMESSAGE " + msg + " SUCCESSFULLY SENT " + roomName + "\n");
-                    }
-                    case "not sent" -> terminal.printf("\nMESSAGE " + msg + " DIDN'T SEND TO THE ROOM " + roomName + "\n");
-                    case "Not in the room" -> terminal.printf("\n MESSAGE "+msg+" DON'T SEND, YOU AREN'T IN THE ROOM \n");
-                    case "Error" -> terminal.printf("\n SOMETHING WENT WRONG AMMO \n");
+                        break;
+                    case "not sent":
+                        terminal.printf("\nMESSAGE " + msg + " DIDN'T SEND TO THE ROOM " + roomName + "\n");
+                        break;
+                    case "Not in the room":
+                        terminal.printf("\n MESSAGE " + msg + " DON'T SEND, YOU AREN'T IN THE ROOM \n");
+                        break;
+                    case "Error":
+                        terminal.printf("\n SOMETHING WENT WRONG AMMO \n");
+                        break;
                 }
             }
         }
@@ -230,9 +268,15 @@ public class Tester {
                 String ris = peer.leaveRoom(roomName);
 
                 switch (ris) {
-                    case "Leave" -> terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
-                    case "Not Leave" -> terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
-                    case "Not joined" -> terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                    case "Leave":
+                        terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
+                        break;
+                    case "Not Leave":
+                        terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
+                        break;
+                    case "Not joined":
+                        terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                        break;
                 }
             }
 
@@ -253,9 +297,15 @@ public class Tester {
 
                 //terminal.print("\nROOM " + roomName + " DESTROYED\n");
                 switch (ris) {
-                    case "Destroyed" -> terminal.printf("\nSUCCESSFULLY DESTROYED THE ROOM \n" + roomName);
-                    case "Not Destroyed" -> terminal.printf("\nERRROR IN ROOM \n" + roomName + " DESTROY YOU AREN'T ALONE, THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH U");
-                    case "Not Found" -> terminal.printf("\nERROR IN ROOM " + roomName + " DESTROY\n" + " MAYBE ROOM DOESN'T EXISTS");
+                    case "Destroyed":
+                        terminal.printf("\nSUCCESSFULLY DESTROYED THE ROOM \n" + roomName);
+                        break;
+                    case "Not Destroyed":
+                        terminal.printf("\nERRROR IN ROOM \n" + roomName + " DESTROY YOU AREN'T ALONE, THERE ARE " + (chatRoom.getUsers().size() - 1) + " USERS WITH U");
+                        break;
+                    case "Not Found":
+                        terminal.printf("\nERROR IN ROOM " + roomName + " DESTROY\n" + " MAYBE ROOM DOESN'T EXISTS");
+                        break;
                 }
             }
         } else {
@@ -263,9 +313,15 @@ public class Tester {
             if (roomName != null && !roomName.isEmpty()) {
                 String ris = peer.leaveRoom(roomName);
                 switch (ris) {
-                    case "Leave" -> terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
-                    case "Not Leave" -> terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
-                    case "Not joined" -> terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                    case "Leave":
+                        terminal.printf("\nSUCCESSFULLY LEAVE FROM\n" + roomName);
+                        break;
+                    case "Not Leave":
+                        terminal.printf("\nERROR IN LEAVE FROM\n" + roomName);
+                        break;
+                    case "Not joined":
+                        terminal.printf("\nERROR IN LEAVE FROM " + roomName + " MAYBE YOU'RE NOT JOINED\n");
+                        break;
                 }
             }
 
@@ -285,9 +341,15 @@ public class Tester {
 
             //terminal.print("\nROOM " + roomName + " DESTROYED\n");
             switch (ris) {
-                case "Founded" -> terminal.printf("\n THERE ARE  \n" + (chatRoom.getUsers().size()) + "USERS  IN " + roomName + " ROOM\n");
-                case "Not found" -> terminal.printf("\nERROR IN ROOM \n" + roomName + " FIND, CHECK THE NAME ");
-                case "Not joined" -> terminal.printf("\nYOU AREN'T IN THE " + roomName + " ROOM \n" + " JOIN ROOM FIRST");
+                case "Founded":
+                    terminal.printf("\n THERE ARE  \n" + (chatRoom.getUsers().size()) + "USERS  IN " + roomName + " ROOM\n");
+                    break;
+                case "Not found":
+                    terminal.printf("\nERROR IN ROOM \n" + roomName + " FIND, CHECK THE NAME ");
+                    break;
+                case "Not joined":
+                    terminal.printf("\nYOU AREN'T IN THE " + roomName + " ROOM \n" + " JOIN ROOM FIRST");
+                    break;
             }
         }
     }
@@ -298,7 +360,7 @@ public class Tester {
         if (peer.getMyChatRoomList().contains(roomName)) {
             List<Message> messageList = listHashMap.get(roomName);
             System.out.println("Messaggio size " + messageList.size());
-            if (messageList.size()==0){
+            if (messageList.size() == 0) {
                 terminal.printf("\n NO NEW MESSAGE IN THE CHAT, TRY LATER\n");
             }
             for (Message message : messageList) {
