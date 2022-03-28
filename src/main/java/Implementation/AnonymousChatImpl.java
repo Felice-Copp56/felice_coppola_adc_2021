@@ -60,7 +60,7 @@ public class AnonymousChatImpl implements AnonymousChat {
                 futureGet.awaitUninterruptibly();
                 if (futureGet.isSuccess()) {
                     if (futureGet.isEmpty()) {
-                        System.out.println("Errore is success");
+
                         return null;
                     }
                     //Ottengo la chatRoom
@@ -147,7 +147,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        System.out.println("Errore fuori");
+
         return "Fallimento";
     }
 

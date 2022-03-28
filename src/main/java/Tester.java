@@ -165,7 +165,7 @@ public class Tester {
                 .withDefaultValue("default-room")
                 .read("Name:");
         if (roomName != null && !roomName.isEmpty()) {
-            System.out.println("Sono dentro ");
+
             String ris = peer.tryToJoinRoom(roomName);
             ChatRoom chatRoom = peer.findRoom(roomName); //Ottengo la room per fornire informazioni
 
