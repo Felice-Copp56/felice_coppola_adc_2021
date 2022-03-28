@@ -52,7 +52,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         });
     }
 
-    //Metodo che permette di controllare se una
+    //Metodo che permette di controllare se una stanza è presente
     public ChatRoom findRoom(String roomName) throws ClassNotFoundException {
         try {
             if (roomName != null) {
@@ -75,6 +75,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return null;
     }
 
+    //Metodo che permette la creazione di una stanza
     public String createChatRoom(ChatRoom chatRoom) {
         try {
             //Verifico se esiste una room con lo stesso nome nelle mie rooms
@@ -95,6 +96,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Fallimento";
     }
 
+    //Metodo che crea effettivamente la stanza, chiamato dal metodo precedente
     @Override
     public boolean createRoom(String _room_name) {
 
@@ -113,6 +115,7 @@ public class AnonymousChatImpl implements AnonymousChat {
 
     }
 
+    //Metodo che richiamata joinRoom se non è già joinato in una stanza
     public String tryToJoinRoom(String _room_name) {
         if (myChatRoomList != null && myChatRoomList.contains(_room_name)) {
             return "Joined";
@@ -120,6 +123,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return joinRoom(_room_name);
     }
 
+    //Metodo che garantisce il join
     @Override
     public String joinRoom(String _room_name) {
         try {
@@ -147,6 +151,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Fallimento";
     }
 
+    //Metodo che permette di lasciare una stanza
     @Override
     public String leaveRoom(String _room_name) throws ClassNotFoundException, IOException {
         if (myChatRoomList.contains(_room_name)){  //Verifico se la room che voglio lasciare è una room alla quale sono sottoscritto
@@ -163,6 +168,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         System.out.println("Non joinato");
         return "Not joined";
     }
+    //Metodo che verifica se è possibile inviare un messaggio
     public String tryToSendMsg(String _room_name, Message msg) throws ClassNotFoundException {
         if (msg!=null&&msg.getRoomName()!=null){
             if (myChatRoomList.contains(msg.getRoomName())){
@@ -175,6 +181,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Error";
     }
 
+    //Metodo che invia un messaggio in una stanza
     @Override
     public String sendMessage(String _room_name, String _text_message) throws ClassNotFoundException {
         if (myChatRoomList.contains(_room_name)) { //Verifico di essere nella room per inviare il messaggio
@@ -201,6 +208,7 @@ public class AnonymousChatImpl implements AnonymousChat {
     }
 
 
+    //Metodo per lasciare il network
     @Override
     public boolean leaveNetwork() throws IOException, ClassNotFoundException {
         for (String subscriptedrooms:new ArrayList<String>(myChatRoomList)){
@@ -210,6 +218,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return true;
     }
 
+    //Metodo per la distruzione di una stanza
     @Override
     public String destroyRoom(String _room_name) throws ClassNotFoundException, IOException {
         if (myChatRoomList.contains(_room_name)) { //Verifico di essere nella room che voglio distruggere
@@ -228,6 +237,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Not Found";
     }
 
+    //Metodo che mostra gli utenti in una stanza
     @Override
     public String showUsers(String _room_name) throws ClassNotFoundException {
         if (myChatRoomList.contains(_room_name)){
@@ -240,6 +250,7 @@ public class AnonymousChatImpl implements AnonymousChat {
         return "Not joined";
     }
 
+    //Metodo che permette di ottenere le chatroom alle quali è connesso un peer
     public HashSet<String> getMyChatRoomList() {
         return myChatRoomList;
     }

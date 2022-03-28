@@ -41,10 +41,10 @@ public class AnonymousChatTesting {
                 TextTerminal terminal = textIO.getTextTerminal();
                 //Verifico se il messaggio è diverso da null ed ha una roomName valido
                 if (message != null && message.getRoomName() != null) {
-                    System.out.println("Sono dentro al null");
+
                     //Se la lista dei messaggi della room non è null, allora posso ottenere la lista e aggiungere un nuovo messaggio
                     if (listHashMap.get(message.getRoomName()) != null) {
-                        System.out.println("Sono dentro al secondo null");
+
                         listHashMap.get(message.getRoomName()).add(message);//Aggiungo il messaggio
                         //terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
                     }
@@ -72,6 +72,7 @@ public class AnonymousChatTesting {
     //Test case per creazione della chatroom
     @Test
     void testCaseCreateChatRoom() {
+        //Il peer0 cerca di creare la stanza e riesce in quanto non esiste una stanza con tale nome
         String ris = peer0.createChatRoom(new ChatRoom("1.1CreateRoom", new HashSet<>()));
         assertEquals("Successo", ris);
     }
@@ -87,6 +88,7 @@ public class AnonymousChatTesting {
         assertEquals("Successo", ris1);
         //Provo a crearne un altra con lo stesso nome
         String ris2 = peer1.createChatRoom(new ChatRoom("1.2CreateRoom_AlreadyCreated", new HashSet<>()));
+        //Riceve un messaggio di esistente
         assertEquals("Esistente", ris2);
         //Provo a creare una stanza dove sono già joinato
         String ris3 = peer0.createChatRoom(new ChatRoom("1.2CreateRoom_AlreadyCreated", new HashSet<>()));
@@ -94,6 +96,10 @@ public class AnonymousChatTesting {
 
     }
 
+    /*
+    I peer provano ad effettuare il join ad una stanza
+    *
+    * */
     @Test
     void testCaseJoinRoom() {
         String ris1 = peer0.createChatRoom(new ChatRoom("2.1JoinRoom", new HashSet<>()));
@@ -110,6 +116,10 @@ public class AnonymousChatTesting {
 
     }
 
+    /*
+    I peer provano a collegarsi ad una stanza alla quale sono già joinati ricevendo
+    un errore
+    * */
     @Test
     void testCaseJoinRoomAlreadyJoined() {
 
@@ -131,12 +141,18 @@ public class AnonymousChatTesting {
 
     }
 
+    /*
+    Il peer 1 cerca di joinare in una stanza non esistente ricevendo un errore
+    * */
     @Test
     void testCaseJoinRoomNotExistent() {
         String ris0 = peer1.tryToJoinRoom("2.3JoinRoomNotExistent");
         assertEquals("Fallimento", ris0);
     }
 
+    /*
+    I peer provano a lasciare una stanza
+    * */
     @Test
     void testCaseLeaveRoom() throws IOException, ClassNotFoundException {
 
@@ -152,11 +168,14 @@ public class AnonymousChatTesting {
         String ris3 = peer0.leaveRoom("3.1LeaveRoom");
         assertEquals("Leave", ris3);
 
-        //Peer 2 prova a rieffettuarlo anche se è già joinato
+        //Peer 1 cerca di uscire
         String ris4 = peer1.leaveRoom("3.1LeaveRoom");
         assertEquals("Leave", ris4);
     }
 
+    /*
+    I peer cercando di lasciare una stanza alla quale non sono joinati
+    * */
     @Test
     void testCaseLeaveRoomNotJoined() throws IOException, ClassNotFoundException {
 
@@ -169,6 +188,10 @@ public class AnonymousChatTesting {
         assertEquals("Not joined", ris2);
     }
 
+    /*
+    Il peer 0 cerca di lasciare una stanza che non è stata creata e alla quale ovviamente
+    non è joinato
+    * */
     @Test
     void testCaseLeaveRoomNotCreated() throws IOException, ClassNotFoundException {
 
@@ -178,6 +201,9 @@ public class AnonymousChatTesting {
 
     }
 
+    /*
+    I peer cercando di inviare messaggi in una stanza
+    * */
     @Test
     void testCaseSendMsg() throws ClassNotFoundException {
 
@@ -185,20 +211,27 @@ public class AnonymousChatTesting {
         String ris1 = peer0.createChatRoom(new ChatRoom("4.1SendMsg", new HashSet<>()));
         assertEquals("Successo", ris1);
 
+        //Peer1 effettua il join
         String ris2 = peer1.tryToJoinRoom("4.1SendMsg");
         assertEquals("Successo", ris2);
 
+        //Peer2 effettua il join
         String ris3 = peer2.tryToJoinRoom("4.1SendMsg");
         assertEquals("Successo", ris3);
 
+        //Peer3 effettua il join
         String ris4 = peer3.tryToJoinRoom("4.1SendMsg");
         assertEquals("Successo", ris4);
 
+        //Viene inviato correttamente il messaggio
         Message msg = new Message("Default message","4.1SendMsg", Calendar.getInstance().getTime(), true);
         String risSend=peer1.tryToSendMsg("4.1SendMsg",msg);
         assertEquals("Sent",risSend);
     }
 
+    /*
+    Il peer1 cerca di inviare un messaggio in una stanza alla quale non è collegato
+    * */
     @Test
     void testCaseSendMsgRoomNotJoined() throws ClassNotFoundException {
         String ris1=peer0.createChatRoom(new ChatRoom("4.2SendMsgNotJoined",new HashSet<>()));
@@ -210,6 +243,8 @@ public class AnonymousChatTesting {
         assertEquals("Not in the room",risSend);
     }
 
+    /*Il peer0 distrugge una stanza
+    * */
     @Test
     void testCaseDestroyRoom() throws IOException, ClassNotFoundException {
         String ris1=peer0.createChatRoom(new ChatRoom("5.1DestroyRoom",new HashSet<>()));
@@ -219,6 +254,9 @@ public class AnonymousChatTesting {
         assertEquals("Destroyed",ris2);
     }
 
+    /*Il peer0 cerca di distruggere una stanza con un altro utente connesso
+    ricevendo un errore
+    * */
     @Test
     void testCaseDestroyRoomWithMoreThan1Users() throws IOException, ClassNotFoundException {
         String ris1=peer0.createChatRoom(new ChatRoom("5.2DestroyRoomWithUsers",new HashSet<>()));
@@ -231,6 +269,9 @@ public class AnonymousChatTesting {
         assertEquals("Not Destroyed",ris3);
     }
 
+    /*Il peer0 cerca di distruggere una stanza non creata o alla quale non è joinato
+    ricevendo errore
+    * */
     @Test
     void testCaseDestroyRoomNotJoined() throws IOException, ClassNotFoundException {
 
@@ -238,6 +279,8 @@ public class AnonymousChatTesting {
         assertEquals("Not Found",ris3);
     }
 
+    /*I peer verificano il numero di utenti, ricevendo un esito positivo
+    * */
     @Test
     void testCaseShowUsers() throws ClassNotFoundException {
         String ris1=peer0.createChatRoom(new ChatRoom("6.1ShowUsers",new HashSet<>()));
@@ -250,6 +293,9 @@ public class AnonymousChatTesting {
         assertEquals("Founded",risShow);
 
     }
+
+    /*Il peer0 cerca di vedere gli utenti in una stanza alla quale non è joinato
+    * */
     @Test
     void testCaseShowUsersRoomNotJoined() throws ClassNotFoundException {
 
@@ -257,6 +303,10 @@ public class AnonymousChatTesting {
         assertEquals("Not joined",risShow);
     }
 
+    /*
+    I peer0 e peer1 cercano di verificare il numero di utenti anche dopo essere usciti, ricevendo
+    un errore
+    * */
     @Test
     void testCaseShowUsersAfterExit() throws ClassNotFoundException, IOException {
         String ris1 = peer0.createChatRoom(new ChatRoom("6.3ShowUsersAfterExit", new HashSet<>()));

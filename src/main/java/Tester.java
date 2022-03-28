@@ -119,7 +119,6 @@ public class Tester {
 
                 //Se la lista dei messaggi della room non è null, allora posso ottenere la lista e aggiungere un nuovo messaggio
 
-
                 listHashMap.get(message.getRoomName()).add(message);//Aggiungo il messaggio
                 //terminal.printf("\n" + peerid + "] (Direct Message Received) Message received in room: " + message.getRoomName() + "ALLE ORE" + message.getData().toString() + "\n\n");
 
