@@ -215,37 +215,44 @@ public class Tester {
         String roomName = textIO.newStringInputReader()
                 .withDefaultValue("default-room")
                 .read("Name:");
-        boolean out = true;
-        Message messaggio = new Message();
-        while (out) {
-            terminal.printf("\nENTER THE MESSAGE FOR THE USERS OR WQ FOR EXIT\n");
-            String msg = textIO.newStringInputReader().withDefaultValue("default-message").read("Message: ");
-            if (msg.equals("WQ")) {
-                out = false;
-            }
 
-            if (roomName != null && !roomName.isEmpty() && out) {
-                messaggio.setMessage(msg);
-                messaggio.setData(Calendar.getInstance().getTime());
-                messaggio.setRoomName(roomName);
-                String ris = peer.tryToSendMsg(roomName, messaggio);
-                switch (ris) {
-                    case "Sent":
-                        //Se non è presente la chiave roomName con la lista, allora creo un arraylist per la stanza cosi da poter inserire il messaggio
-                        listHashMap.computeIfAbsent(roomName, k -> new ArrayList<>());
-                        listHashMap.get(roomName).add(messaggio);
+        if(!peer.getMyChatRoomList().contains(roomName)){
 
-                        terminal.printf("\nMESSAGE " + msg + " SUCCESSFULLY SENT " + roomName + "\n");
-                        break;
-                    case "not sent":
-                        terminal.printf("\nMESSAGE " + msg + " DIDN'T SEND TO THE ROOM " + roomName + "\n");
-                        break;
-                    case "Not in the room":
-                        terminal.printf("\n MESSAGE " + msg + " DON'T SEND, YOU AREN'T IN THE ROOM \n");
-                        break;
-                    case "Error":
-                        terminal.printf("\n SOMETHING WENT WRONG AMMO \n");
-                        break;
+            terminal.printf("\nYOU'RE NOT IN THE ROOM"+" :"+roomName+"\n");
+        }
+        else {
+            boolean out=true;
+            Message messaggio = new Message();
+            while (out) {
+                terminal.printf("\nENTER THE MESSAGE FOR THE USERS OR WQ FOR EXIT\n");
+                String msg = textIO.newStringInputReader().withDefaultValue("default-message").read("Message: ");
+                if (msg.equals("WQ")) {
+                    out = false;
+                }
+
+                if (roomName != null && !roomName.isEmpty() && out) {
+                    messaggio.setMessage(msg);
+                    messaggio.setData(Calendar.getInstance().getTime());
+                    messaggio.setRoomName(roomName);
+                    String ris = peer.tryToSendMsg(roomName, messaggio);
+                    switch (ris) {
+                        case "Sent":
+                            //Se non è presente la chiave roomName con la lista, allora creo un arraylist per la stanza cosi da poter inserire il messaggio
+                            listHashMap.computeIfAbsent(roomName, k -> new ArrayList<>());
+                            listHashMap.get(roomName).add(messaggio);
+
+                            terminal.printf("\nMESSAGE " + msg + " SUCCESSFULLY SENT " + roomName + "\n");
+                            break;
+                        case "not sent":
+                            terminal.printf("\nMESSAGE " + msg + " DIDN'T SEND TO THE ROOM " + roomName + "\n");
+                            break;
+                        case "Not in the room":
+                            terminal.printf("\n MESSAGE " + msg + " DON'T SEND, YOU AREN'T IN THE ROOM \n");
+                            break;
+                        case "Error":
+                            terminal.printf("\n SOMETHING WENT WRONG AMMO \n");
+                            break;
+                    }
                 }
             }
         }
