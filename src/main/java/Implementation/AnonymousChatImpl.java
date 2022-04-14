@@ -239,15 +239,15 @@ public class AnonymousChatImpl implements AnonymousChat {
 
     //Metodo che mostra gli utenti in una stanza
     @Override
-    public String showUsers(String _room_name) throws ClassNotFoundException {
+    public int showUsers(String _room_name) throws ClassNotFoundException {
         if (myChatRoomList.contains(_room_name)){
             ChatRoom chatRoom = findRoom(_room_name);
             if (chatRoom!=null&&chatRoom.getUsers().contains(peerDHT.peer().peerAddress())){
-                return "Founded";
+                return chatRoom.getUsers().size();
             }
-            return "Not found";
+            return -1;
         }
-        return "Not joined";
+        return -2;
     }
 
     //Metodo che permette di ottenere le chatroom alle quali è connesso un peer

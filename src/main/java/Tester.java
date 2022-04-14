@@ -343,22 +343,18 @@ public class Tester {
 
         if (roomName != null && !roomName.isEmpty()) {
             ChatRoom chatRoom = peer.findRoom(roomName);
-            String ris = peer.showUsers(roomName);
+            int ris = peer.showUsers(roomName);
 
             //terminal.print("\nROOM " + roomName + " DESTROYED\n");
-            switch (ris) {
-                case "Founded":
+
+                if(ris>=0)
                     terminal.printf("\n THERE ARE  \n" + (chatRoom.getUsers().size()) + "USERS  IN " + roomName + " ROOM\n");
-                    break;
-                case "Not found":
+                else if (ris==-1)
                     terminal.printf("\nERROR IN ROOM \n" + roomName + " FIND, CHECK THE NAME ");
-                    break;
-                case "Not joined":
-                    terminal.printf("\nYOU AREN'T IN THE " + roomName + " ROOM \n" + " JOIN ROOM FIRST");
-                    break;
+                else
+                    terminal.printf("\nPROBLEM WITH THE RETRIEVE OF " + roomName + " ROOM \n");
             }
         }
-    }
 
     public void showMsg() {
 

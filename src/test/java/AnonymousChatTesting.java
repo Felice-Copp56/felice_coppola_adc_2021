@@ -289,8 +289,9 @@ public class AnonymousChatTesting {
         String ris2=peer1.tryToJoinRoom("6.1ShowUsers");
         assertEquals("Successo",ris2);
 
-        String risShow=peer0.showUsers("6.1ShowUsers");
-        assertEquals("Founded",risShow);
+        int risShow=peer0.showUsers("6.1ShowUsers");
+        assertEquals(2,risShow);
+
 
     }
 
@@ -299,8 +300,8 @@ public class AnonymousChatTesting {
     @Test
     void testCaseShowUsersRoomNotJoined() throws ClassNotFoundException {
 
-        String risShow=peer0.showUsers("6.2ShowUsersRoomNotFound");
-        assertEquals("Not joined",risShow);
+        int risShow=peer0.showUsers("6.2ShowUsersRoomNotFound");
+        assertEquals(-2,risShow);
     }
 
     /*
@@ -312,26 +313,26 @@ public class AnonymousChatTesting {
         String ris1 = peer0.createChatRoom(new ChatRoom("6.3ShowUsersAfterExit", new HashSet<>()));
         assertEquals("Successo", ris1);
 
-        String risShow = peer0.showUsers("6.3ShowUsersAfterExit");
-        assertEquals("Founded", risShow);
+        int risShow = peer0.showUsers("6.3ShowUsersAfterExit");
+        assertEquals(1, risShow);
 
         String ris2 = peer1.tryToJoinRoom("6.3ShowUsersAfterExit");
         assertEquals("Successo", ris2);
 
-        String ris2Show=peer1.showUsers("6.3ShowUsersAfterExit");
-        assertEquals("Founded",ris2Show);
+        int ris2Show=peer1.showUsers("6.3ShowUsersAfterExit");
+        assertEquals(2,ris2Show);
 
         String ris3 = peer1.leaveRoom("6.3ShowUsersAfterExit");
         assertEquals("Leave", ris3);
 
-        String ris3Show=peer1.showUsers("6.3ShowUsersAfterExit");
-        assertEquals("Not joined",ris3Show);
+        int ris3Show=peer1.showUsers("6.3ShowUsersAfterExit");
+        assertEquals(-2,ris3Show);
 
         String ris4 = peer0.leaveRoom("6.3ShowUsersAfterExit");
         assertEquals("Leave", ris4);
 
-        String ris4Show=peer0.showUsers("6.3ShowUsersAfterExit");
-        assertEquals("Not joined",ris3Show);
+        int ris4Show=peer0.showUsers("6.3ShowUsersAfterExit");
+        assertEquals(-2,ris4Show);
 
 
     }
