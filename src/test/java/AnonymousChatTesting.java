@@ -279,7 +279,8 @@ public class AnonymousChatTesting {
         assertEquals("Not Found",ris3);
     }
 
-    /*I peer verificano il numero di utenti, ricevendo un esito positivo
+    /*I peer verificano il numero di utenti, ricevendo un esito positivo con il numero di utenti totali
+    inclusi loro stessi
     * */
     @Test
     void testCaseShowUsers() throws ClassNotFoundException {
@@ -310,27 +311,33 @@ public class AnonymousChatTesting {
     * */
     @Test
     void testCaseShowUsersAfterExit() throws ClassNotFoundException, IOException {
+        //Il peer0 crea correttamente la stanza
         String ris1 = peer0.createChatRoom(new ChatRoom("6.3ShowUsersAfterExit", new HashSet<>()));
         assertEquals("Successo", ris1);
 
+        //Verifica il numero di utenti, ed è 1 (lui stesso)
         int risShow = peer0.showUsers("6.3ShowUsersAfterExit");
         assertEquals(1, risShow);
 
+        //Il peer1 entra nella stanza
         String ris2 = peer1.tryToJoinRoom("6.3ShowUsersAfterExit");
         assertEquals("Successo", ris2);
 
+        //Il peer1 verifica il numero di utenti, 2 (lui e peer0)
         int ris2Show=peer1.showUsers("6.3ShowUsersAfterExit");
         assertEquals(2,ris2Show);
 
         String ris3 = peer1.leaveRoom("6.3ShowUsersAfterExit");
         assertEquals("Leave", ris3);
 
+        //Prova a rivedere ma essendo uscito non può
         int ris3Show=peer1.showUsers("6.3ShowUsersAfterExit");
         assertEquals(-2,ris3Show);
 
         String ris4 = peer0.leaveRoom("6.3ShowUsersAfterExit");
         assertEquals("Leave", ris4);
 
+        //Lo stesso fa il peer0 ricevendo un errore
         int ris4Show=peer0.showUsers("6.3ShowUsersAfterExit");
         assertEquals(-2,ris4Show);
 
