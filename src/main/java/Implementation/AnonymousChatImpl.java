@@ -141,7 +141,7 @@ public class AnonymousChatImpl implements AnonymousChat {
                         e.printStackTrace();
                     }
                 //}
-                System.out.println("Errore nell'iff");
+
                 return "Fallimento";
             }
         } catch (Exception exception) {
