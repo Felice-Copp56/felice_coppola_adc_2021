@@ -216,12 +216,11 @@ public class Tester {
                 .withDefaultValue("default-room")
                 .read("Name:");
 
-        if(!peer.getMyChatRoomList().contains(roomName)){
+        if (!peer.getMyChatRoomList().contains(roomName)) {
 
-            terminal.printf("\nYOU'RE NOT IN THE ROOM"+" :"+roomName+"\n");
-        }
-        else {
-            boolean out=true;
+            terminal.printf("\nYOU'RE NOT IN THE ROOM" + " :" + roomName + "\n");
+        } else {
+            boolean out = true;
             Message messaggio = new Message();
             while (out) {
                 terminal.printf("\nENTER THE MESSAGE FOR THE USERS OR WQ FOR EXIT\n");
@@ -347,18 +346,20 @@ public class Tester {
 
             //terminal.print("\nROOM " + roomName + " DESTROYED\n");
 
-                if(ris>=0)
-                    terminal.printf("\n THERE ARE  \n" + (chatRoom.getUsers().size()) + "USERS  IN " + roomName + " ROOM\n");
-                else if (ris==-1)
-                    terminal.printf("\nERROR IN ROOM \n" + roomName + " FIND, CHECK THE NAME ");
-                else
-                    terminal.printf("\nPROBLEM WITH THE RETRIEVE OF " + roomName + " ROOM \n");
-            }
+            if (ris == 1)
+                terminal.printf("\n THERE IS ONLY YOU " + "IN " + roomName + " ROOM\n");
+            else if (ris >= 0)
+                terminal.printf("\n THERE ARE (INCLUDING YOU) " + (chatRoom.getUsers().size()) + " USERS  IN " + roomName + " ROOM\n");
+            else if (ris == -1)
+                terminal.printf("\nERROR IN ROOM \n" + roomName + " FIND, CHECK THE NAME ");
+            else
+                terminal.printf("\nPROBLEM WITH THE RETRIEVE OF " + roomName + " ROOM \n");
         }
+    }
 
     public void showMsg() {
 
-        String roomName = textIO.newStringInputReader().read("\n INSERT NAME ");
+        String roomName = textIO.newStringInputReader().read("\n ENTER ROOM NAME THAT YOU WANT TO SEE THE MSGS ");
         if (peer.getMyChatRoomList().contains(roomName)) {
             List<Message> messageList = listHashMap.get(roomName);
             System.out.println("Messaggio size " + messageList.size());
