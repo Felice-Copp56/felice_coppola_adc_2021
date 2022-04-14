@@ -130,7 +130,7 @@ public class AnonymousChatImpl implements AnonymousChat {
 
             ChatRoom chatRoom = findRoom(_room_name);
             if (chatRoom != null) {
-                if (!chatRoom.getUsers().contains(peer.peerAddress())) {
+                //if (!chatRoom.getUsers().contains(peer.peerAddress())) {
                     chatRoom.addUser(peerDHT.peer().peerAddress());
                     try {
                         peerDHT.put(Number160.createHash(_room_name)).data(new Data(chatRoom)).start().awaitUninterruptibly();
@@ -140,7 +140,7 @@ public class AnonymousChatImpl implements AnonymousChat {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
+                //}
                 System.out.println("Errore nell'iff");
                 return "Fallimento";
             }
